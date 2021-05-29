@@ -13,8 +13,9 @@ def show_game():
     board = boggle_game.make_board()
     session['board'] = board
     highscore = session.get("highscore", 0)
+    numOfPlays = session.get("numOfPlays", 0)
 
-    return render_template('index.html', board=board, highscore=highscore)
+    return render_template('index.html', board=board, highscore=highscore, numOfPlays=numOfPlays)
 
 @app.route('/check-word')
 def check_word():
@@ -37,4 +38,4 @@ def game_over():
     session['numOfPlays'] = numOfPlays + 1
     session['highscore'] = max(score, highscore)
 
-    return jsonify(brokeRecord=score > highscore)
+    return jsonify(newRecord=score > highscore)

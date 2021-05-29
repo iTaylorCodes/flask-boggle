@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %}Boggle{% endblock %} {% block content %}
 <h1>Boggle</h1>
 
-<div id="game">
+<section id="game">
 	<table class="board">
 		<tbody>
 			{% for row in board %}
@@ -16,19 +16,19 @@
 
 	<p>
 		High Score:
-		<b>{{ highscore }}</b>
+		<b class="highscore">{{ highscore }}</b>
 		in {{ numOfPlays }} plays
 	</p>
 
 	<p>Score: <b class="score">0</b> Seconds Left: <b class="timer"></b></p>
 
 	<form method="POST" class="add-word">
-		<input name="word" class="word" type="text" placeholder="Enter a word" />
+		<input name="word" class="word" type="text" placeholder="Enter a word" autofocus />
 		<button>Submit Word</button>
 	</form>
 
 	<p class="msg"></p>
 
 	<ul class="words"></ul>
-</div>
+</section>
 {% endblock %}

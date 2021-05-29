@@ -1,5 +1,7 @@
 const $board = $('#game');
 const words = new Set();
+const $msg = $('.msg');
+let score = 0;
 
 // Handler for word submition
 async function handleWordSubmit(e) {
@@ -18,6 +20,8 @@ async function handleWordSubmit(e) {
 
 	// If word already submitted do nothing
 	if (words.has(word)) {
+		showMessage(`${word} already submitted`, 'err');
+		$word.val('').focus();
 		return;
 	}
 
@@ -26,40 +30,42 @@ async function handleWordSubmit(e) {
 
 	// Check word and respond with message about word status
 	if (res.data.result === 'not-a-word') {
-		showMessage(`${word} is not a valid word`, 'err');
+		showMessage(`${word} is not a word`, 'err');
 	} else if (res.data.result === 'not-on-board') {
 		showMessage(`${word} is not on this game board`, 'err');
 	} else {
 		showWord(word);
-		showMessage(`Added: ${word}! Worth ${word} points!`, 'ok');
+		score += word.length;
+		showScore();
+		words.add(word);
+		showMessage(`Added: ${word}! Worth ${word.length} points!`, 'ok');
 	}
 
 	$word.val('').focus();
 }
 
-$('.add-word button').on('submit', handleWordSubmit);
+$('.add-word', $board).on('submit', handleWordSubmit);
 
 function showMessage(msg, cls) {
-	$('.msg', $board).empty().text(msg).removeClass().addClass(`msg-${cls}`);
+	$msg.empty().text(msg).removeClass().addClass(`msg-${cls}`);
 }
 
 function showWord(word) {
 	$('.words', $board).append($('<li>', { text: word }));
 }
 
-let score = 0;
-
 function showScore() {
-	$('.score', $board).text(0);
+	$('.score').text(score);
 }
 
 async function scoreGame() {
 	$('.add-word', $board).hide();
 	const res = await axios.post('/game-over', { score: score });
-	if (res.data.brokeRecord) {
-		showMessage(`New record: ${this.score}`, 'ok');
+	if (res.data.newRecord) {
+		showMessage(`New Highscore: ${score}`, 'ok');
+		$('.highscore').text(score);
 	} else {
-		showMessage(`Final score: ${this.score}`, 'ok');
+		showMessage(`Final score: ${score}`, 'ok');
 	}
 }
 
@@ -76,6 +82,6 @@ async function countDown() {
 
 	if (time === 0) {
 		clearInterval(timer);
-		await this.scoreGame();
+		await scoreGame();
 	}
 }
