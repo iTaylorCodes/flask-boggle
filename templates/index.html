@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block title %}Boggle{% endblock %} {% block content %}
+<h1>Boggle</h1>
+
+<table class="board">
+	<tbody>
+		{% for row in board %}
+		<tr>
+			{% for cell in row %}
+			<td>{{ cell }}</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}
